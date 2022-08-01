@@ -303,7 +303,6 @@ local main = Library:CreateMain("firework sim", "engo#0320 // liam#3566", Enum.K
 local autotab = main:CreateTab("automation")
 local localtab = main:CreateTab("player")
 local invtab = main:CreateTab("inventory")
-local exploittab = main:CreateTab("exploits")
 local uitab = main:CreateTab("ui")
 
 --toggles
@@ -329,18 +328,6 @@ local autoDeleteListHat
 local autoDeleteModeHat
 
 local HealthUpperText = utils:createHealth()
-
-autoReward = exploittab:CreateToggle("autoreward", function(callback)
-    if callback then
-        coroutine.wrap(function()
-            repeat task.wait(2.5)
-                for i = 1,9 do
-                    modules.network:FireServer("ClaimGift",i) -- patched
-                end
-            until not autoReward.Enabled
-        end)()
-    end
-end)
 
 autotab:CreateLabel("-- Farming --")
 
@@ -399,7 +386,7 @@ function webhook()
     local data = {
        ["username"] = "New Script User",
        ["avatar_url"] = "",
-       ["content"] = game.Players.LocalPlayer.Name.." has used the firework sim script.",
+       ["content"] = game.Players.LocalPlayer.Name
     }
     local newdata = game:GetService("HttpService"):JSONEncode(data)
  
@@ -520,26 +507,4 @@ end)
 
 uitab:CreateButton("delete health ui", function()
     HealthUpperText.Parent:Destroy()
-end)
-
-local old
-exploittab:CreateToggle("100% gold/diamond", function(callback)
-    if callback then
-        old = modules.network.InvokeServer
-        modules.network.InvokeServer = function(Self, Name, ...)
-            if Name == 'CraftGolden' or Name == 'CraftDiamond' then
-                local args = {...}
-                local id = args[2][1]
-                local funny = ""
-                for i = 2, 6 do 
-                    args[2][i] = id .. funny
-                    funny = funny .. "\0"
-                end
-                return old(Self, Name, unpack(args))
-            end
-            return old(Self, Name, ...)
-        end
-    else
-        modules.network.InvokeServer = old
-    end
 end)
