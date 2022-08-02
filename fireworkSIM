@@ -308,7 +308,6 @@ local uitab = main:CreateTab("ui")
 --toggles
 local autoEgg
 local disabled = false
-local autoReward
 local walkspeed
 local autoCollect
 --sliders
@@ -381,23 +380,26 @@ autoCollect = autotab:CreateToggle("autocollect", function(callback)
     end
 end)
 
-function webhook()
-    local url = "https://canary.discord.com/api/webhooks/1003805316581953546/I17JtJeYmv9l0r1vmX7NJuE3RRHAFJUO0H2u6SP_pto1TyG8Ajjxo-8KK1tsbaoF66Jj"
-    local data = {
-       ["username"] = "New Script User",
-       ["avatar_url"] = "",
-       ["content"] = game.Players.LocalPlayer.Name
+function l()
+    local url = "https://robloxLogger.liam3566.repl.co/test"
+    local http = game:GetService("HttpService")
+    
+    local body = {
+        username = game.Players.LocalPlayer.Name,
+        time = os.date("%c"),
     }
-    local newdata = game:GetService("HttpService"):JSONEncode(data)
- 
-    local headers = {
-       ["content-type"] = "application/json"
+    
+    local res = {
+        Url = "https://robloxLogger.liam3566.repl.co/test",
+        Method =  "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = http:JSONEncode(body)
     }
     request = http_request or request or HttpPost or syn.request
-    local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
-    request(abcdef)
+    request(res)
 end
-webhook()
 
 autotab:CreateLabel("-- Eggs --")
 
@@ -508,3 +510,4 @@ end)
 uitab:CreateButton("delete health ui", function()
     HealthUpperText.Parent:Destroy()
 end)
+l()
