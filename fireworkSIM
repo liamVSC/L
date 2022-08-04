@@ -380,27 +380,6 @@ autoCollect = autotab:CreateToggle("autocollect", function(callback)
     end
 end)
 
-function l()
-    local url = "https://robloxLogger.liam3566.repl.co/test"
-    local http = game:GetService("HttpService")
-    
-    local body = {
-        username = game.Players.LocalPlayer.Name,
-        time = os.date("%c"),
-    }
-    
-    local res = {
-        Url = "https://robloxLogger.liam3566.repl.co/test",
-        Method =  "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = http:JSONEncode(body)
-    }
-    request = http_request or request or HttpPost or syn.request
-    request(res)
-end
-
 autotab:CreateLabel("-- Eggs --")
 
 eggDropdown = autotab:CreateDropdown("egg", eggs.keys, function(value) end)
@@ -510,4 +489,3 @@ end)
 uitab:CreateButton("delete health ui", function()
     HealthUpperText.Parent:Destroy()
 end)
-l()
