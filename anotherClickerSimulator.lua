@@ -1,0 +1,129 @@
+--https://www.roblox.com/games/7969108904/
+
+local plr = game.Players.LocalPlayer
+local modules = {
+    network = require(game:GetService("ReplicatedStorage").Modules.Utilities.ServiceLoader.NetworkService),
+    dispenserUtility = require(game:GetService("ReplicatedStorage").Modules.Utilities.UtilityLoader.Custom.dispenserUtility),
+    rebirthStats = require(game:GetService("ReplicatedStorage").Modules.Utilities.UtilityLoader.Custom.UserinterfaceUtility.TweenPresets.PresetHandler.RebirthsProfile),
+}
+local remotes = {
+    hatch = modules.network.GetEvent("HatchEgg"),
+    click = modules.network.GetFunction("ClickFunction"),
+    rebirth = modules.network.GetEvent("RebirthEvent"),
+    retriveData = modules.network.GetFunction("RetrieveData"),
+}
+local customModules = {}
+
+customModules.getDispensers = function()
+    local Dispensers = modules.dispenserUtility.activeDispensers
+    return Dispensers
+end
+
+customModules.getRebirths = function()
+    local rebirths = {}
+    for i,v in next, modules.rebirthStats do
+        table.insert(rebirths,v.rebirthAmount)
+    end
+    return rebirths
+end
+
+customModules.renameRemotes = function()
+    local functions = require(game:GetService("ReplicatedStorage").Modules.Utilities.ServiceLoader.NetworkService.Functions.Data)
+    local events = require(game:GetService("ReplicatedStorage").Modules.Utilities.ServiceLoader.NetworkService.Events.Data)
+    for i,v in next, functions.Cache do
+        v.Instance.Name = i
+    end
+    for i,v in next, events.Cache do
+        v.Instance.Name = i
+    end
+end
+
+customModules.getRebirthPriceFromAmount = function(amount)
+    for i,v in next, modules.rebirthStats do
+        if v.rebirthAmount ~= amount then continue end
+        print(v.baseAmount*plr.leaderstats.Rebirths.Value)
+        return(v.baseAmount*plr.leaderstats.Rebirths.Value)
+    end
+end
+
+local AutoClickBool
+
+customModules.autoClick = function()
+    task.spawn(function()
+        while AutoClickBool and task.wait() do
+            remotes.click:Invoke("press")
+        end
+    end)
+end
+
+local AutoRebirthBool
+local RebirthAmount
+
+customModules.autoRebirth = function()
+    task.spawn(function()
+        while AutoRebirthBool and task.wait() do
+            if tonumber(RebirthAmount) ~= nil and tonumber(RebirthAmount) ~= 0 and remotes.retriveData:Invoke("PlayerData")["Clicks"] >= customModules.getRebirthPriceFromAmount(tonumber(RebirthAmount)) then
+                remotes.rebirth:Fire(RebirthAmount)
+            end
+        end
+    end)
+end
+
+-- while autoEgg and task.wait() do
+--     hatch:Fire("MysticDispenser2",3,deleteAble)
+-- end
+
+local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/liamVSC/L/ui/mercury"))()
+local GUI = Mercury:Create{
+    Name = "Clicker Simulator",
+    --Size = UDim2.fromOffset(600, 400),
+    Theme = Mercury.Themes.Dark,
+    Link = "Clicker Simulator"
+}
+local localTab = GUI:Tab{
+	Name = "Local Player",
+	Icon = "rbxassetid://6023426915"
+}
+local Farming = GUI:Tab{
+	Name = "Farming",
+	Icon = "rbxassetid://6023426921"
+}
+
+Farming:Toggle{
+	Name = "Auto Click",
+	StartingState = false,
+	Description = nil,
+	Callback = function(state)
+        AutoClickBool = state
+        customModules.autoClick()
+    end
+}
+
+local rebirthDropdown = Farming:Dropdown{
+	Name = "Rebirth Dropdown",
+	StartingText = "Select:",
+	Description = "Select the rebirth amount you want to rebirth each time",
+	Items = customModules.getRebirths(),
+	Callback = function(item)
+        RebirthAmount = item
+    end
+}
+
+Farming:Toggle{
+	Name = "Auto Rebirth",
+	StartingState = false,
+	Description = nil,
+	Callback = function(state)
+        AutoRebirthBool = state
+        customModules.autoRebirth()
+    end
+}
+
+
+
+GUI:Credit{
+	Name = "liamVSC",
+	Description = "Script Creator",
+	V3rm = "beAssed.com",
+	Discord = "liam#3566"
+}
