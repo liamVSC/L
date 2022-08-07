@@ -80,6 +80,7 @@ end
 
 customModules.getHatsFromZone = function(zone)
     local hats = {}
+    print(zone)
     for i,v in next, require(game:GetService("ReplicatedStorage").Game.Hats)[zone] do
         table.insert(hats,v.RealName)
     end
@@ -199,6 +200,7 @@ Farming:Dropdown{
         customModules.loadAllZones()
         zone = item
         itemDropdown:Clear()
+        hatDropdown:Clear()
         task.wait(0.25)
         itemDropdown:AddItems(customModules.getZonesItems(item))
         hatDropdown:AddItems(customModules.getHatsFromZone(item))
