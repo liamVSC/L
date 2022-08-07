@@ -12,6 +12,19 @@ customModules.bypassAntiCheat = function()
     end)
 end
 
+coroutine.wrap(function() 
+    pcall(function() 
+        if getconnections then 
+            repeat
+                for i,v in pairs(getconnections(game:GetService("ScriptContext").Error)) do
+                    v:Disable()
+                end
+                task.wait(5)
+            until false == true
+        end
+    end)
+end)()
+
 customModules.bypassAntiCheat()
 
 customModules.getZones = function()
@@ -117,6 +130,10 @@ local Farming = GUI:Tab{
 	Name = "automation",
 	Icon = "rbxassetid://6023426921"
 }
+-- local pets = GUI:Tab{
+--     Name = "pets/eggs",
+--     Icon = "rbxassetid://6031260782"
+-- }
 
 local itemDropdown
 
@@ -163,6 +180,8 @@ Farming:Toggle{
         customModules.autoOrbs()
     end
 }
+
+
 
 localTab:Slider{
 	Name = "WalkSpeed",
