@@ -78,6 +78,14 @@ customModules.getPetsFromEgg = function(egg)
     return pets
 end
 
+customModules.getHatsFromZone = function(zone)
+    local hats = {}
+    for i,v in next, require(game:GetService("ReplicatedStorage").Game.Hats)[zone] do
+        table.insert(hats,v.RealName)
+    end
+    return hats
+end
+
 customModules.getNearestItem = function(zone,select)
     if select == "All" or select == nil then select = "" end
     if not workspace.GameObjects.Areas[zone] then return end
@@ -116,14 +124,16 @@ local autoOrbsBool
 
 customModules.autoOrbs = function()
     game.Workspace.Orbs.ChildAdded:connect(function(C)
-        network:FireServer("CollectOrb", C.Name);
-        C:Destroy()
+        if autoOrbsBool then
+            network:FireServer("CollectOrb", C.Name);
+            C:Destroy()
+        end
     end)
     task.spawn(function()
         while autoOrbsBool and task.wait() do
             for i,v in pairs(game.Workspace.Orbs:GetChildren()) do
                 network:FireServer("CollectOrb", v.Name);
-                v:Destroy();
+                --v:Destroy();
             end
         end
     end)
@@ -140,6 +150,20 @@ customModules.autoEgg = function()
             network:InvokeServer("OpenEgg",eggSelected,amountToOpen,deleteList)
             print("hatching")
         until not autoEggBool
+    end)
+end
+
+local deleteHatList = {}
+local autoHatBool
+
+customModules.autoHat = function()
+    plr.PlayerGui.GameUI.Menus.Hats.MainList.ChildAdded:Connect(function(child)
+        if autoHatBool then
+            if deleteHatList[child.Frame.HatName.Text] then
+                network:InvokeServer("DeleteHat",child.Name)
+                child:Destroy()
+            end
+        end
     end)
 end
 
@@ -164,6 +188,7 @@ local pets = GUI:Tab{
 }
 
 local itemDropdown
+local hatDropdown
 
 Farming:Dropdown{
 	Name = "Zone Dropdown",
@@ -175,6 +200,7 @@ Farming:Dropdown{
         itemDropdown:Clear()
         task.wait(0.25)
         itemDropdown:AddItems(customModules.getZonesItems(item))
+        hatDropdown:AddItems(customModules.getHatsFromZone(item))
         zone = item
     end
 }
@@ -206,6 +232,28 @@ Farming:Toggle{
 	Callback = function(state)
         autoOrbsBool = state
         customModules.autoOrbs()
+    end
+}
+
+hatDropdown = Farming:Dropdown{
+    Name = "Hats Dropdown",
+	StartingText = "Select:",
+	Description = "Select the hats you want to delete from farming",
+	Items = {"Select an area to farm"},
+	Callback = function(item)
+        deleteHatList[tostring(item)] = true
+        printtable(deleteHatList)
+        hatDropdown:RemoveItems({item})
+    end
+}
+
+Farming:Toggle{
+	Name = "Auto Delete Hats",
+	StartingState = false,
+	Description = nil,
+	Callback = function(state)
+        autoHatBool = state
+        customModules.autoHat()
     end
 }
 
