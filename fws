@@ -318,6 +318,38 @@ localTab:Slider{
     end
 }
 
+localTab:Button{
+    Name = "Open/Close Golden Pets",
+    Description = nil,
+	Callback = function() 
+        plr.PlayerGui.GameUI.Menus.Golden.Visible = not plr.PlayerGui.GameUI.Menus.Golden.Visible
+    end
+}
+
+localTab:Button{
+    Name = "Open/Close Diamond Pets",
+    Description = nil,
+	Callback = function() 
+        plr.PlayerGui.GameUI.Menus.Diamond.Visible = not plr.PlayerGui.GameUI.Menus.Diamond.Visible
+    end
+}
+
+localTab:Button{
+    Name = "Open/Close Rainbow Pets",
+    Description = nil,
+	Callback = function()
+        plr.PlayerGui.GameUI.Menus.Rainbow.Visible = not plr.PlayerGui.GameUI.Menus.Rainbow.Visible
+    end
+}
+
+localTab:Button{
+    Name = "Open/Close Shiny Hats",
+    Description = nil,
+	Callback = function()
+        plr.PlayerGui.GameUI.Menus.Shiny.Visible = not plr.PlayerGui.GameUI.Menus.Shiny.Visible
+    end
+}
+
 GUI:Credit{
 	Name = "liam",
 	Description = "Script Creator",
