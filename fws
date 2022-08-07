@@ -133,7 +133,7 @@ customModules.autoOrbs = function()
         while autoOrbsBool and task.wait() do
             for i,v in pairs(game.Workspace.Orbs:GetChildren()) do
                 network:FireServer("CollectOrb", v.Name);
-                --v:Destroy();
+                v:Destroy();
             end
         end
     end)
@@ -171,7 +171,7 @@ local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/liamV
 local GUI = Mercury:Create{
     Name = "Firework Simulator",
     --Size = UDim2.fromOffset(600, 400),
-    Theme = Mercury.Themes.Dark,
+    Theme = Mercury.Themes.Rust,
     Link = "Firework Simulator"
 }
 local localTab = GUI:Tab{
@@ -197,11 +197,11 @@ Farming:Dropdown{
 	Items = customModules.getZones(),
 	Callback = function(item)
         customModules.loadAllZones()
+        zone = item
         itemDropdown:Clear()
         task.wait(0.25)
         itemDropdown:AddItems(customModules.getZonesItems(item))
         hatDropdown:AddItems(customModules.getHatsFromZone(item))
-        zone = item
     end
 }
 
