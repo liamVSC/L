@@ -93,6 +93,7 @@ customModules.getNearestItem = function(zone,select)
     local item
     local nearestDist = math.huge;
     for i,v in next, workspace.GameObjects.Areas:FindFirstChild(zone).Items:GetChildren() do
+        if not v.PrimaryPart then continue end
         local dist = (v.PrimaryPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
         if dist < nearestDist and v.Name:match(select) then
             item = v; nearestDist = dist;
@@ -187,6 +188,8 @@ local pets = GUI:Tab{
     Name = "pets/eggs",
     Icon = "rbxassetid://6031260782"
 }
+
+Mercury:set_status("ONLINE")
 
 local itemDropdown
 local hatDropdown
