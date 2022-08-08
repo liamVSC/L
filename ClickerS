@@ -1,5 +1,7 @@
 --https://www.roblox.com/games/7969108904/
 
+if game.PlaceId ~= 7969108904 then return warn("WRONG GAME") end
+
 local plr = game.Players.LocalPlayer
 local modules = {
     network = require(game:GetService("ReplicatedStorage").Modules.Utilities.ServiceLoader.NetworkService),
