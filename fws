@@ -189,7 +189,7 @@ local pets = GUI:Tab{
     Icon = "rbxassetid://6031260782"
 }
 
-Mercury:set_status("ONLINE")
+GUI:set_status("ONLINE")
 
 local itemDropdown
 local hatDropdown
