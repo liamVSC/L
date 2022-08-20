@@ -1,2 +1,0 @@
-setclipboard("loadstring(game:HttpGet("https://raw.githubusercontent.com/liamVSC/L/main/fws"))()")
-game.Players.LocalPlayer:Kick("New Script Set to clipboard")
